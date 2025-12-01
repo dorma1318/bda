@@ -1,0 +1,14 @@
+pig -x local
+
+create a text file and enter "Welcome to hadoop \n welcome to pig" as stud1.txt
+after that
+
+x = LOAD '/home/cloudera/Desktop/stud1.txt' as (line:chararray);
+
+words = FOREACH x GENERATE FLATTEN(TOKENIZE(line)) as word;
+
+grouped = GROUP words BY word;
+
+wordcount = FOREACH grouped GENERATE group,COUNT(words);
+
+DUMP wordcount;
