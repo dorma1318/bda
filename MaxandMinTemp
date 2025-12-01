@@ -64,3 +64,12 @@ InterruptedException {
         System.exit(job.waitForCompletion(true) ? 0 : 1); 
     } 
 } 
+
+
+jar -cvf WeatherAnalysis.jar WeatherAnalysis*.class
+hadoop fs -mkdir /user/input_weather
+hadoop fs -put C:\path\to\your\weather_data.txt /user/input_weather/
+hadoop fs -rm -r /user/output_weather 
+hadoop jar WeatherAnalysis.jar WeatherAnalysis /user/input_weather /user/output_weather
+
+
