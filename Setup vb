@@ -1,0 +1,134 @@
+The default Ubuntu repositories contain Java 8 and Java 11 both. I am using Java 8 because hive only works on this version.Use the following command to install it.
+>sudo apt update && sudo apt install openjdk-8-jdk
+
+Once you have successfully installed it, check the current Java version:
+>java -version
+
+SSH (Secure Shell) installation is vital for Hadoop as it enables secure communication between nodes in the Hadoop cluster. This ensures data integrity, confidentiality, and allows for efficient distributed processing of data across the cluster.
+>sudo apt install ssh
+
+All the Hadoop components will run as the user that you create for Apache Hadoop, and the user will also be used for logging in to Hadoop’s web interface.
+>sudo adduser Hadoop
+
+Switch to the newly created hadoop user:
+>su - Hadoop
+
+Now configure password-less SSH access for the newly created hadoop user, so I didn’t enter key to save file and passpharse. Generate an SSH keypair first:
+>ssh-keygen -t rsa
+
+Copy the generated public key to the authorized key file and set the proper permissions:
+>cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys   
+>chmod 640 ~/.ssh/authorized_keys
+
+SSH to the localhost:
+>ssh localhost
+
+Again switch to Hadoop
+>su - hadoop
+
+Download hadoop 3.3.6
+>wget  https://dlcdn.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+
+Once you’ve downloaded the file, you can unzip it to a folder.
+>tar -xvzf hadoop-3.3.6.tar.gz
+>mv hadoop-3.3.6 Hadoop
+>nano ~/.bashrc
+>export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export HADOOP_HOME=/home/hadoop/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export HADOOP_YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
+
+Load the above configuration in the current environment.
+>source ~/.bashrc
+
+You also need to configure JAVA_HOME in hadoop-env.sh file. Edit the Hadoop environment variable file in the text editor:
+>nano $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+
+Search for the “export JAVA_HOME” and configure it .
+>JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+First, you will need to create the namenode and datanode directories inside the Hadoop user home directory. Run the following command to create both directories:
+>cd hadoop/
+>mkdir -p ~/hadoopdata/hdfs/{namenode,datanode}
+>nano $HADOOP_HOME/etc/hadoop/core-site.xml
+Change the following name as per your system hostname:
+><configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000</value>
+    </property>
+</configuration>
+Save and close the file.
+
+Then, edit the hdfs-site.xml file
+>nano $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+Change the NameNode and DataNode directory paths as shown below:
+><configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///home/hadoop/hadoopdata/hdfs/namenode</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///home/hadoop/hadoopdata/hdfs/datanode</value>
+    </property>
+ </configuration>
+
+Then, edit the mapred-site.xml file:
+>nano $HADOOP_HOME/etc/hadoop/mapred-site.xml
+><configuration>
+   <property>
+      <name>yarn.app.mapreduce.am.env</name>
+      <value>HADOOP_MAPRED_HOME=$HADOOP_HOME/home/hadoop/hadoop/bin/hadoop</value>
+   </property>
+   <property>
+      <name>mapreduce.map.env</name>
+      <value>HADOOP_MAPRED_HOME=$HADOOP_HOME/home/hadoop/hadoop/bin/hadoop</value>
+   </property>
+   <property>
+      <name>mapreduce.reduce.env</name>
+      <value>HADOOP_MAPRED_HOME=$HADOOP_HOME/home/hadoop/hadoop/bin/hadoop</value>
+   </property>
+</configuration>
+
+Then, edit the yarn-site.xml file:
+>nano $HADOOP_HOME/etc/hadoop/yarn-site.xml
+><configuration>
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+</configuration>
+Save the file and close it .
+
+>hdfs namenode -format
+>start-all.sh
+>jps
+
+Access Hadoop Namenode and Resource Manager 
+>sudo apt install net-tools
+>ifconfig
+
+o access the Namenode, open your web browser and visit the URL http://your-server-ip:9870. You should see the following screen:
+http://192.168.1.6:9870
+
+To access Resource Manage, open your web browser and visit the URL http://your-server-ip:8088. You should see the following screen:
+http://192.168.1.6:8088
+
+>hdfs dfs -mkdir /test1
+>hdfs dfs -mkdir /logs
+>hdfs dfs -ls /
+>hdfs dfs -put /var/log/* /logs/
+>stop-all.sh
+
+
