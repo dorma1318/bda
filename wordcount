@@ -105,3 +105,23 @@ public class WordCount {
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
+
+
+Step 1. Open Eclipse> File > New > Java Project > (Name it – MRProgramsDemo) >
+Finish
+Step 2. Right Click > New > Package ( Name it - PackageDemo) > Finish
+Step 3. Right Click on Package > New > Class (Name it - WordCount)
+Step 4. Add Following Reference Libraries –
+Right Click on Project > Build Path> Add External Archivals
+ /usr/lib/hadoop-0.20/hadoop-core.jar
+ Usr/lib/hadoop-0.20/lib/Commons-cli-1.2.jar
+Make Jar File
+Right Click on Project> Export> Select export destination as Jar File > next> Finish
+
+hdfs dfs -mkdir /input_dir
+hdfs dfs -copyFromLocal C:\input.txt /input_dir
+hadoop jar C:\path\to\your\customwordcount.jar your.package.name.RunnerClassName /input /output
+hdfs dfs -cat /output/*
+
+stop-yarn.cmd
+stop-dfs.cmd
