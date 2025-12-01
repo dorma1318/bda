@@ -1,0 +1,38 @@
+Hive
+
+su -
+pass: cloudera
+
+-- Step 0: Create a file
+gedit /home/cloudera/Desktop/stud
+
+101,Alice,8.5
+102,Bob,7.9
+103,Charlie,9.1
+
+Type hive and press enter
+
+-- Step 1: Create database
+CREATE DATABASE databasename;
+
+-- Step 2: Use the newly created database
+USE databasename;
+
+-- Step 3: Create table with '|' as field delimiter
+CREATE TABLE tablename (id INT, name STRING, gpa FLOAT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+-- Step 4: Load data from local file (created at /home/cloudera/Desktop/stud)
+LOAD DATA LOCAL INPATH '/home/cloudera/Desktop/stud'
+INTO TABLE tablename;
+
+-- Step 5: View all databases
+SHOW DATABASES;
+
+-- Step 6: Show all tables in current database
+SHOW TABLES;
+
+-- Step 7: Select all data from table
+SELECT * FROM tablename;
+
+-- Step 8: Insert a single row into the table
+INSERT INTO TABLE tablename VALUES (104, 'David', 8.2);
