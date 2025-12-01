@@ -107,6 +107,34 @@ public class WordCount {
 }
 
 
+>Hadoop version
+>javac -version
+>start-dfs.sh
+>start-yarn.sh
+>jps
+WordCount.java
+New Folder - input_data
+	input.txt
+New Folder - tutorial_classes
+>export HADOOP_CLASSPATH=$(Hadoop classpath)
+>echo $HADOOP_CLASSPATH
+>Hadoop fs -mkdir /WordCountTutorial
+>Hadoop fs -mkdir /WordCountTutorial/ Input
+localhost:50070
+Browse File System - check
+>Hadoop fs -put "path .txt" /WordCountTutorial /Input
+>cd /home/Desktop/WordCountTutorial
+>clear
+>javac -classpath $(HADOOP_CLASSPATH) -d "path tutorial folder" "path WordCount.java" 
+splits into 3 classes - copy
+>jar -cvf firstTutorial.jar -C tutorial_classes/ .
+>Hadoop jar "path Wordcount.java" WordCount / WordCountTutorial /Input /WordCountTutorial /Output
+>Hadoop dfs -cat /WordCountTutorial /Output /*
+
+
+
+
+
 Step 1. Open Eclipse> File > New > Java Project > (Name it – MRProgramsDemo) >
 Finish
 Step 2. Right Click > New > Package ( Name it - PackageDemo) > Finish
