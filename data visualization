@@ -1,0 +1,15 @@
+plot.qplot(Sepal.Length,Petal.Length,data=iris,color=Species,size=Petal.Width,alpha= I(0.7))
+plot.qplot(Sepal.Length, Petal.Length, data=iris,color=Species,xlab="SepalLength",ylab="PetalLength",main="Sepalvs. Petal Length in Fisher's Iris data")
+
+library(caret)
+data(iris)
+featurePlot(x=iris[,1:4], y=iris[,5], plot="density", scales=list(x=list(relation="free"), y=list(relation="free")), auto.key=list(columns=3))
+
+data(iris)
+pairs(iris)
+
+data(iris)
+par(mfrow=c(1,4))
+for(i in 1:4) {
+hist(iris[,i], main=names(iris)[i])
+}
